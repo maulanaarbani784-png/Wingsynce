@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "@/firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, setDoc, onSnapshot } from "firebase/firestore";
 
 interface UserProfile {
   uid: string;
@@ -23,31 +23,42 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (u) => {
+    let unsubscribeProfile: () => void;
+
+    const unsubscribeAuth = onAuthStateChanged(auth, (u) => {
       setUser(u);
       if (u) {
-        // Fetch or create profile
         const userRef = doc(db, "users", u.uid);
-        const userDoc = await getDoc(userRef);
-        if (userDoc.exists()) {
-          setProfile(userDoc.data() as UserProfile);
-        } else {
-          const profileData: UserProfile = {
-            uid: u.uid,
-            email: u.email || "",
-            username: (u.email || "").split("@")[0],
-            avatar: "https://i.pravatar.cc/150?u=" + u.uid,
-            verified: false,
-          };
-          await setDoc(userRef, profileData);
-          setProfile(profileData);
-        }
+        unsubscribeProfile = onSnapshot(userRef, (docSnap) => {
+          if (docSnap.exists()) {
+            setProfile(docSnap.data() as UserProfile);
+            setLoading(false);
+          } else {
+            const profileData: UserProfile = {
+              uid: u.uid,
+              email: u.email || "",
+              username: (u.email || "").split("@")[0],
+              avatar: "https://i.pravatar.cc/150?u=" + u.uid,
+              verified: false,
+            };
+            setDoc(userRef, profileData);
+          }
+        });
       } else {
         setProfile(null);
+        setLoading(false);
+        if (unsubscribeProfile) {
+          unsubscribeProfile();
+        }
       }
-      setLoading(false);
     });
-    return () => unsubscribe();
+
+    return () => {
+      unsubscribeAuth();
+      if (unsubscribeProfile) {
+        unsubscribeProfile();
+      }
+    };
   }, []);
 
   return <AuthContext.Provider value={{ user, profile, loading }}>{children}</AuthContext.Provider>;
