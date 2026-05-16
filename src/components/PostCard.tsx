@@ -30,10 +30,10 @@ export const PostCard = ({ post }: any) => {
   };
 
   return (
-    <div style={{ borderBottom: `1px solid ${COLORS.border}`, paddingBottom: 8 }}>
+    <div style={{ paddingBottom: 16 }}>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", padding: "10px 14px", gap: 10 }}>
-        <GradientAvatar src={post.user.avatar} size={36} hasStory />
+        <GradientAvatar src={post.user.avatar} size={32} hasStory />
         <div style={{ flex: 1 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
             <span style={{ fontWeight: 600, fontSize: 13.5, color: COLORS.text }}>{post.user.username}</span>
@@ -41,8 +41,7 @@ export const PostCard = ({ post }: any) => {
           </div>
           {post.location && (
             <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
-              <LocationIcon />
-              <span style={{ fontSize: 11, color: COLORS.muted }}>{post.location}</span>
+              <span style={{ fontSize: 11, color: COLORS.text }}>{post.location}</span>
             </div>
           )}
         </div>
@@ -53,7 +52,7 @@ export const PostCard = ({ post }: any) => {
 
       {/* Image */}
       <div style={{ position: "relative", cursor: "pointer" }} onDoubleClick={handleDoubleTap}>
-        <img src={post.image} alt="" style={{ width: "100%", display: "block", maxHeight: 480, objectFit: "cover" }} />
+        <img src={post.image} alt="" style={{ width: "100%", display: "block", maxHeight: 580, objectFit: "cover" }} />
         {doubleHeart && (
           <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
             animation: "heartPop 0.9s ease forwards", pointerEvents: "none" }}>
@@ -66,30 +65,35 @@ export const PostCard = ({ post }: any) => {
 
       {/* Actions */}
       <div style={{ padding: "10px 14px 4px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 10 }}>
           <button onClick={handleLike} style={{ background: "none", border: "none", cursor: "pointer",
             display: "flex", alignItems: "center", transform: liked ? "scale(1.2)" : "scale(1)",
-            transition: "transform 0.15s" }}>
+            transition: "transform 0.15s", padding: 0 }}>
             <HeartIcon filled={liked} />
           </button>
-          <button onClick={() => setShowComments(s => !s)} style={{ background: "none", border: "none", cursor: "pointer" }}>
-            <CommentIcon />
+          <button onClick={() => setShowComments(s => !s)} style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
           </button>
-          <button style={{ background: "none", border: "none", cursor: "pointer" }}><ShareIcon /></button>
+          <button onClick={() => setSaved(s => !s)} style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}>
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          </button>
           <div style={{ flex: 1 }} />
-          <button onClick={() => setSaved(s => !s)} style={{ background: "none", border: "none", cursor: "pointer" }}>
+          <button onClick={() => setSaved(s => !s)} style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}>
             <BookmarkIcon filled={saved} />
           </button>
         </div>
 
-        <div style={{ fontSize: 13.5, fontWeight: 700, color: COLORS.text, marginBottom: 4 }}>
-          {likes.toLocaleString()} suka
+        <div style={{ fontSize: 13.5, color: COLORS.text, marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
+          <img src="https://i.pravatar.cc/150?img=11" alt="" style={{ width: 16, height: 16, borderRadius: 8 }} />
+          <span>Disukai oleh <strong>its_your_boy_fazzu06</strong> dan <strong>lainnya</strong></span>
         </div>
-        <div style={{ fontSize: 13.5, color: COLORS.text, marginBottom: 3 }}>
-          <span style={{ fontWeight: 700, marginRight: 5 }}>{post.user.username}</span>
+        <div style={{ fontSize: 13.5, color: COLORS.text, marginBottom: 3, lineHeight: 1.4 }}>
+          <strong style={{ marginRight: 5 }}>{post.user.username}</strong>
           {post.caption}
         </div>
-        <div style={{ fontSize: 12, color: COLORS.muted, marginBottom: 6 }}>{post.time}</div>
+        <div style={{ fontSize: 12, color: COLORS.muted, marginBottom: 6, display: "flex", alignItems: "center", gap: 6 }}>
+           {post.time} <span>·</span> <strong>Lihat terjemahan</strong>
+        </div>
 
         {/* Comments preview */}
         {!showComments && comments.length > 0 && (

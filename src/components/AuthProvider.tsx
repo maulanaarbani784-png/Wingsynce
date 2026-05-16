@@ -7,8 +7,12 @@ interface UserProfile {
   uid: string;
   email: string;
   username: string;
+  name: string;
   avatar: string;
   verified: boolean;
+  bio: string;
+  birthday?: string;
+  onboardingCompleted?: boolean;
 }
 
 const AuthContext = createContext<{ user: User | null; profile: UserProfile | null; loading: boolean }>({
@@ -29,21 +33,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(u);
       if (u) {
         const userRef = doc(db, "users", u.uid);
-        unsubscribeProfile = onSnapshot(userRef, (docSnap) => {
-          if (docSnap.exists()) {
-            setProfile(docSnap.data() as UserProfile);
+        unsubscribeProfile = onSnapshot(
+          userRef,
+          (docSnap) => {
+            if (docSnap.exists()) {
+              setProfile(docSnap.data() as UserProfile);
+              setLoading(false);
+            } else {
+              const profileData: UserProfile = {
+                uid: u.uid,
+                email: u.email || "",
+                username: (u.email || "").split("@")[0],
+                name: "",
+                avatar: "https://i.pravatar.cc/150?u=" + u.uid,
+                verified: false,
+                bio: "",
+                onboardingCompleted: false,
+              };
+              setDoc(userRef, profileData).catch(console.error);
+              setProfile(profileData);
+              setLoading(false);
+            }
+          },
+          (error) => {
+            console.error("Error fetching profile:", error);
             setLoading(false);
-          } else {
-            const profileData: UserProfile = {
-              uid: u.uid,
-              email: u.email || "",
-              username: (u.email || "").split("@")[0],
-              avatar: "https://i.pravatar.cc/150?u=" + u.uid,
-              verified: false,
-            };
-            setDoc(userRef, profileData);
           }
-        });
+        );
       } else {
         setProfile(null);
         setLoading(false);

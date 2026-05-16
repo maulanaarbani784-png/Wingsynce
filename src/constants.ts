@@ -1,15 +1,17 @@
 export const COLORS = {
-  bg: "#0a0a0a",
-  surface: "#111111",
-  card: "#181818",
-  border: "#2a2a2a",
-  accent: "#e1306c",
+  bg: "#000000",
+  surface: "#121212",
+  card: "#1a1a1a",
+  border: "#262626",
+  accent: "#0095f6",
   accentOrange: "#f77737",
   accentYellow: "#fcaf45",
   accentPurple: "#833ab4",
-  text: "#f5f5f5",
-  muted: "#888",
+  text: "#fafafa",
+  muted: "#a8a8a8",
   white: "#ffffff",
+  input: "#262626",
+  error: "#ed4956"
 };
 
 export const USERS = [

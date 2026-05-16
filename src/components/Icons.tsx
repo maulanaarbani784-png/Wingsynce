@@ -21,7 +21,7 @@ export const ProfileIcon = ({ filled }: any) => <Icon filled={filled} color={COL
   d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z" />;
 export const LocationIcon = () => <Icon d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0zM12 10a1 1 0 100-2 1 1 0 000 2z" size={12} color={COLORS.muted} />;
 export const VerifiedIcon = () => (
-  <svg width={14} height={14} viewBox="0 0 24 24" fill={COLORS.accent}>
+  <svg width={14} height={14} viewBox="0 0 24 24" fill="#0095f6">
     <path d="M12 2l2.4 4.8 5.6.8-4 3.9.9 5.5L12 14.5l-4.9 2.5.9-5.5-4-3.9 5.6-.8z" />
   </svg>
 );

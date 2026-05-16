@@ -8,7 +8,6 @@ export const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -21,16 +20,16 @@ export const Login = () => {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
       } else {
-        if (!username) {
-          throw new Error("Username is required");
-        }
         const cred = await createUserWithEmailAndPassword(auth, email, password);
         await setDoc(doc(db, "users", cred.user.uid), {
           uid: cred.user.uid,
           email: email,
-          username: username,
+          username: email.split("@")[0], // Default temp username
+          name: "",
           avatar: "https://i.pravatar.cc/150?u=" + cred.user.uid,
           verified: false,
+          bio: "",
+          onboardingCompleted: false
         }, { merge: true });
       }
     } catch (err: any) {
@@ -43,7 +42,7 @@ export const Login = () => {
   return (
     <div style={{ padding: 20, minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", background: COLORS.bg }}>
       <div style={{ width: "100%", maxWidth: 350, background: COLORS.card, padding: "40px 30px", borderRadius: 12, border: `1px solid ${COLORS.border}`, marginBottom: 16 }}>
-        <h1 style={{ fontFamily: "'Billabong', 'Georgia', serif", fontSize: 44, fontWeight: 700, textAlign: "center", marginBottom: 32, letterSpacing: 1, color: COLORS.text }}>
+        <h1 style={{ fontFamily: "'Grand Hotel', cursive", fontSize: 48, fontWeight: 500, textAlign: "center", marginBottom: 32, letterSpacing: 1, color: COLORS.text }}>
           WingSync
         </h1>
         
@@ -64,16 +63,6 @@ export const Login = () => {
             required
             style={{ width: "100%", padding: "10px 12px", borderRadius: 4, border: `1px solid ${COLORS.border}`, background: COLORS.surface, color: COLORS.text, fontSize: 13, outline: "none" }}
           />
-          {!isLogin && (
-            <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              style={{ width: "100%", padding: "10px 12px", borderRadius: 4, border: `1px solid ${COLORS.border}`, background: COLORS.surface, color: COLORS.text, fontSize: 13, outline: "none" }}
-            />
-          )}
           <input
             type="password"
             placeholder="Password"
@@ -91,8 +80,8 @@ export const Login = () => {
 
           <button
             type="submit"
-            disabled={loading || !email || !password || (!isLogin && !username)}
-            style={{ width: "100%", padding: "10px", marginTop: 8, borderRadius: 8, background: "#0095f6", color: "white", fontWeight: 600, fontSize: 14, border: "none", cursor: (loading || !email || !password || (!isLogin && !username)) ? "not-allowed" : "pointer", opacity: (loading || !email || !password || (!isLogin && !username)) ? 0.7 : 1, transition: "0.2s" }}
+            disabled={loading || !email || !password}
+            style={{ width: "100%", padding: "10px", marginTop: 8, borderRadius: 8, background: "#0095f6", color: "white", fontWeight: 600, fontSize: 14, border: "none", cursor: (loading || !email || !password) ? "not-allowed" : "pointer", opacity: (loading || !email || !password) ? 0.7 : 1, transition: "0.2s" }}
           >
             {loading ? "Loading..." : isLogin ? "Log in" : "Sign up"}
           </button>

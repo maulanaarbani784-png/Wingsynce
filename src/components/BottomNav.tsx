@@ -1,12 +1,12 @@
 import { COLORS } from "@/constants";
-import { HomeIcon, SearchIcon, PlusIcon, HeartIcon, ProfileIcon } from "./Icons";
+import { HomeIcon, SearchIcon, PlusIcon, HeartIcon, ProfileIcon, ReelIcon } from "./Icons";
 
 export const BottomNav = ({ active, setActive }: any) => {
   const tabs = [
     { id: "home", label: "Home", Icon: ({ filled }: any) => <HomeIcon filled={filled} /> },
     { id: "explore", label: "Cari", Icon: () => <SearchIcon /> },
     { id: "new", label: "Buat", Icon: () => <PlusIcon /> },
-    { id: "activity", label: "Suka", Icon: ({ filled }: any) => <HeartIcon filled={filled} /> },
+    { id: "reel", label: "Reels", Icon: () => <ReelIcon /> },
     { id: "profile", label: "Profil", Icon: ({ filled }: any) => <ProfileIcon filled={filled} /> },
   ];
   return (
